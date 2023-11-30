@@ -1,8 +1,8 @@
 package com.example.trangbanhangonline.controller.user_login;
 
-import com.example.trangbanhangonline.dto.requestDTO.LoginDTO;
-import com.example.trangbanhangonline.dto.responseDTO.UserResponseDTO;
-import com.example.trangbanhangonline.service.UserService;
+import com.example.trangbanhangonline.dto.requestDTO.user.LoginDTO;
+import com.example.trangbanhangonline.dto.responseDTO.user.UserResponseDTO;
+import com.example.trangbanhangonline.service.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

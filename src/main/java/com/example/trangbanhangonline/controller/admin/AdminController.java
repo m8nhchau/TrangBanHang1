@@ -1,17 +1,16 @@
 package com.example.trangbanhangonline.controller.admin;
 
-import com.example.trangbanhangonline.dto.requestDTO.OrderRequestDTO;
-import com.example.trangbanhangonline.dto.requestDTO.ProductRequestDTO;
-import com.example.trangbanhangonline.dto.requestDTO.UserRequestDTO;
-import com.example.trangbanhangonline.dto.responseDTO.OrderResponseDTO;
-import com.example.trangbanhangonline.dto.responseDTO.ProductResponseDTO;
-import com.example.trangbanhangonline.dto.responseDTO.UserResponseDTO;
+import com.example.trangbanhangonline.dto.requestDTO.order.OrderRequestDTO;
+import com.example.trangbanhangonline.dto.requestDTO.product.ProductRequestDTO;
+import com.example.trangbanhangonline.dto.requestDTO.user.UserRequestDTO;
+import com.example.trangbanhangonline.dto.responseDTO.product.ProductResponseDTO;
+import com.example.trangbanhangonline.dto.responseDTO.user.UserResponseDTO;
 import com.example.trangbanhangonline.entity.Orders;
 import com.example.trangbanhangonline.entity.Product;
 import com.example.trangbanhangonline.entity.User;
 import com.example.trangbanhangonline.enums.UserRoleEnum;
-import com.example.trangbanhangonline.service.AdminService;
-import com.example.trangbanhangonline.service.SessionService;
+import com.example.trangbanhangonline.service.user.AdminService;
+import com.example.trangbanhangonline.service.session.SessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,27 +62,27 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         UserResponseDTO createUser = adminService.addUser(userRequestDTO);
-        return new ResponseEntity<UserResponseDTO>(createUser, HttpStatus.OK);
+        return ResponseEntity.ok(createUser);
     }
 
     @PutMapping("/update-user")
-    public ResponseEntity<User> updateUser(@RequestHeader(name = "SESSION_CODE") String sessionCode,@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestHeader(name = "SESSION_CODE") String sessionCode,@RequestBody UserRequestDTO userRequestDTO){
         User currentUser = sessionService.validate(sessionCode);
         if(!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)){
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
-        User addUser = adminService.updateUser(userRequestDTO);
-        return new ResponseEntity<User>(addUser, HttpStatus.OK);
+        UserResponseDTO addUser = adminService.updateUser(userRequestDTO);
+        return new ResponseEntity<UserResponseDTO>(addUser, HttpStatus.OK);
     }
 
     @PostMapping("/delete-user")
-    public ResponseEntity<User> deleteUser(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> deleteUser(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody UserRequestDTO userRequestDTO) {
         User currentUser = sessionService.validate(sessionCode);
         if(!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)){
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
-        User removeUser = adminService.deleteUser(userRequestDTO);
-        return new ResponseEntity<User>(removeUser, HttpStatus.OK);
+        UserResponseDTO removeUser = adminService.deleteUser(userRequestDTO);
+        return new ResponseEntity<UserResponseDTO>(removeUser, HttpStatus.OK);
     }
 
     //admin xac nhan don hang

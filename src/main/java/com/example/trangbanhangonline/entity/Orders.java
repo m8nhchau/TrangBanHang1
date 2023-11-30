@@ -1,6 +1,5 @@
 package com.example.trangbanhangonline.entity;
 
-import com.example.trangbanhangonline.dto.requestDTO.OrderRequestDTO;
 import com.example.trangbanhangonline.enums.OrderStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
