@@ -9,6 +9,7 @@ import com.example.trangbanhangonline.dto.responseDTO.user.UserResponseDTO;
 import com.example.trangbanhangonline.entity.Product;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -21,6 +22,7 @@ public interface AdminService {
     UserResponseDTO addUser(UserRequestDTO userRequestDTO);
     UserResponseDTO updateUser(UserRequestDTO userRequestDTO);
     UserResponseDTO deleteUser(UserRequestDTO userRequestDTO);
+    List<UserResponseDTO> findByUser(UserRequestDTO userRequestDTO);
 // xác nhận/ hủy dơn hàng
 
     OrderResponseDTO addOrder(OrderRequestDTO orderRequestDTO);

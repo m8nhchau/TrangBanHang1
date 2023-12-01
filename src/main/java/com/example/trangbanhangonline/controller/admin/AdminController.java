@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
@@ -42,7 +44,7 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         Product removeProduct = adminService.deleteProduct(productRequestDTO);
-        return new ResponseEntity<Product>(removeProduct, HttpStatus.OK);
+        return ResponseEntity.ok(removeProduct);
     }
 
     @PutMapping("/update-product")
@@ -52,7 +54,7 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         Product addProduct = adminService.updateProduct(productRequestDTO);
-        return new ResponseEntity<Product>(addProduct, HttpStatus.OK);
+        return ResponseEntity.ok(addProduct);
     }
 
 // them sua xoa User
@@ -73,7 +75,7 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         UserResponseDTO addUser = adminService.updateUser(userRequestDTO);
-        return new ResponseEntity<UserResponseDTO>(addUser, HttpStatus.OK);
+        return ResponseEntity.ok(addUser);
     }
 
     @PostMapping("/delete-user")
@@ -83,9 +85,17 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         UserResponseDTO removeUser = adminService.deleteUser(userRequestDTO);
-        return new ResponseEntity<UserResponseDTO>(removeUser, HttpStatus.OK);
+        return ResponseEntity.ok(removeUser);
     }
-
+    @PostMapping("/find-user")
+    public ResponseEntity<List<UserResponseDTO>> findUser(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody UserRequestDTO userRequestDTO){
+        User currentUser = sessionService.validate(sessionCode);
+        if(!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)){
+            throw new RuntimeException("Bạn không có quyền truy nhập!");
+        }
+        List<UserResponseDTO> findUser = adminService.findByUser(userRequestDTO);
+        return ResponseEntity.ok(findUser);
+    }
     //admin xac nhan/huy don hang
     @PostMapping("/access-order")
     public ResponseEntity<OrderResponseDTO> updateOrder(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody OrderRequestDTO orderRequestDTO){

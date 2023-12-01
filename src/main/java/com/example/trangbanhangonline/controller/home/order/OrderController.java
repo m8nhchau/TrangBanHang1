@@ -24,7 +24,7 @@ public class OrderController {
     private final OrderService orderService;
     private final SessionService sessionService;
 
-    @GetMapping("/order-filter")
+    @GetMapping("/find-order")
     public ResponseEntity<List<OrderResponseDTO>> findOrder(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody OrderRequestDTO orderRequestDTO) throws ParseException {
         User currentUser = sessionService.validate(sessionCode);
         if (!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)) {

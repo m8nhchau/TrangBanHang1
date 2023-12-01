@@ -19,6 +19,7 @@ import com.example.trangbanhangonline.repository.order.OrderRepository;
 import com.example.trangbanhangonline.repository.product.ProductRepository;
 import com.example.trangbanhangonline.repository.product.ProductTypeRepository;
 import com.example.trangbanhangonline.repository.user.UserRepository;
+import com.example.trangbanhangonline.repository.user.UserRepositoryEM;
 import com.example.trangbanhangonline.service.user.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
     private final UserMapper userMapper;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final UserRepositoryEM userRepositoryEM;
 
     //Admin thêm sửa xóa Product
     @Override
@@ -154,6 +156,11 @@ public class AdminServiceImpl implements AdminService {
         return userResponseDTO;
     }
 
+    @Override
+    public List<UserResponseDTO> findByUser(UserRequestDTO userRequestDTO) {
+        List<UserResponseDTO> userResponseDTOList = userRepositoryEM.findByCondition(userRequestDTO);
+        return userResponseDTOList;
+    }
     // admin xác nhận/ hủy đơn hàng
     @Override
     public OrderResponseDTO addOrder(OrderRequestDTO orderRequestDTO) {
