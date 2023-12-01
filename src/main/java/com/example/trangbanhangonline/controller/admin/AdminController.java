@@ -3,6 +3,7 @@ package com.example.trangbanhangonline.controller.admin;
 import com.example.trangbanhangonline.dto.requestDTO.order.OrderRequestDTO;
 import com.example.trangbanhangonline.dto.requestDTO.product.ProductRequestDTO;
 import com.example.trangbanhangonline.dto.requestDTO.user.UserRequestDTO;
+import com.example.trangbanhangonline.dto.responseDTO.order.OrderResponseDTO;
 import com.example.trangbanhangonline.dto.responseDTO.product.ProductResponseDTO;
 import com.example.trangbanhangonline.dto.responseDTO.user.UserResponseDTO;
 import com.example.trangbanhangonline.entity.Orders;
@@ -31,7 +32,7 @@ public class AdminController {
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
         ProductResponseDTO createProduct = adminService.addProduct(productRequestDTO);
-        return new ResponseEntity<ProductResponseDTO>(createProduct, HttpStatus.OK);
+        return ResponseEntity.ok(createProduct);
     }
 
     @PostMapping("/delete-product")
@@ -85,15 +86,24 @@ public class AdminController {
         return new ResponseEntity<UserResponseDTO>(removeUser, HttpStatus.OK);
     }
 
-    //admin xac nhan don hang
+    //admin xac nhan/huy don hang
     @PostMapping("/access-order")
-    public ResponseEntity<Orders> updateOrder(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody OrderRequestDTO orderRequestDTO){
+    public ResponseEntity<OrderResponseDTO> updateOrder(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody OrderRequestDTO orderRequestDTO){
         User currentUser = sessionService.validate(sessionCode);
         if(!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)){
             throw new RuntimeException("Bạn không có quyền truy nhập!");
         }
-        Orders addOrder = adminService.addOrder(orderRequestDTO);
+        OrderResponseDTO addOrder = adminService.addOrder(orderRequestDTO);
     return ResponseEntity.ok(addOrder);
     }
 
+    @PostMapping("/cancel-order")
+    public ResponseEntity<OrderResponseDTO> cancelOrder(@RequestHeader(name = "SESSION_CODE") String sessionCode, @RequestBody OrderRequestDTO orderRequestDTO) {
+        User currentUser = sessionService.validate(sessionCode);
+        if (!currentUser.getUserRole().equals(UserRoleEnum.ADMIN)) {
+            throw new RuntimeException("Bạn không có quyền truy nhập!");
+        }
+        OrderResponseDTO cancelOrder = adminService.cancelOrder(orderRequestDTO);
+        return ResponseEntity.ok(cancelOrder);
+    }
 }

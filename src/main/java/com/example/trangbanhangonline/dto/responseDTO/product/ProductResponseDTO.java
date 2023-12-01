@@ -15,5 +15,6 @@ public class ProductResponseDTO {
     private Double price;
     private Date createDate;
     private ProductType productType;
+    private String productTypeName;
 
 }

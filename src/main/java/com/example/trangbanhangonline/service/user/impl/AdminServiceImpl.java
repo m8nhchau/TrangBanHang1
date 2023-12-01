@@ -3,15 +3,19 @@ package com.example.trangbanhangonline.service.user.impl;
 import com.example.trangbanhangonline.dto.requestDTO.order.OrderRequestDTO;
 import com.example.trangbanhangonline.dto.requestDTO.product.ProductRequestDTO;
 import com.example.trangbanhangonline.dto.requestDTO.user.UserRequestDTO;
+import com.example.trangbanhangonline.dto.responseDTO.order.OrderResponseDTO;
 import com.example.trangbanhangonline.dto.responseDTO.product.ProductResponseDTO;
 import com.example.trangbanhangonline.dto.responseDTO.user.UserResponseDTO;
 import com.example.trangbanhangonline.entity.Orders;
 import com.example.trangbanhangonline.entity.Product;
 import com.example.trangbanhangonline.entity.ProductType;
 import com.example.trangbanhangonline.entity.User;
+import com.example.trangbanhangonline.enums.OrderStatusEnum;
+import com.example.trangbanhangonline.mapper.order.OrderMapper;
 import com.example.trangbanhangonline.mapper.product.ProductMapper;
 import com.example.trangbanhangonline.mapper.product.ProductRequestMapper;
 import com.example.trangbanhangonline.mapper.user.UserMapper;
+import com.example.trangbanhangonline.repository.order.OrderRepository;
 import com.example.trangbanhangonline.repository.product.ProductRepository;
 import com.example.trangbanhangonline.repository.product.ProductTypeRepository;
 import com.example.trangbanhangonline.repository.user.UserRepository;
@@ -33,6 +37,8 @@ public class AdminServiceImpl implements AdminService {
     private final ProductTypeRepository productTypeRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
     //Admin thêm sửa xóa Product
     @Override
@@ -101,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
     public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
         User userNew = userMapper.toEntityUser(userRequestDTO);
         List<User> userList = userRepository.findUserByUserId(userRequestDTO.getUserId());
-        if(!userList.isEmpty()) {
+        if (!userList.isEmpty()) {
             throw new RuntimeException("người dùng không tồn tại");
         }
 
@@ -123,7 +129,7 @@ public class AdminServiceImpl implements AdminService {
             user.setUserName(userRequestDTO.getUserName());
         }
         if (userRequestDTO.getBirthday() != null) {
-           user.setBirthday(userRequestDTO.getBirthday());
+            user.setBirthday(userRequestDTO.getBirthday());
         }
 
         user = userRepository.save(user);
@@ -148,9 +154,46 @@ public class AdminServiceImpl implements AdminService {
         return userResponseDTO;
     }
 
+    // admin xác nhận/ hủy đơn hàng
     @Override
-    public Orders addOrder(OrderRequestDTO orderRequestDTO) {
-        return null;
+    public OrderResponseDTO addOrder(OrderRequestDTO orderRequestDTO) {
+        Orders orders = orderRepository.findByOrderId(orderRequestDTO.getOrderId());
+        if (orders == null) {
+            throw new RuntimeException("Đơn hàng đã bị user hủy!");
+        }
+        if (orders.getStatus().equals(OrderStatusEnum.ChoXacNhan)) {
+
+        }
+        if (orderRequestDTO.getOrderId() != null) {
+
+        }
+        orders.setStatus(OrderStatusEnum.DaXacNhan);
+        orders = orderRepository.save(orders);
+        OrderResponseDTO orderResponseDTO = orderMapper.toResponseOrder(orders);
+        return  orderResponseDTO;
     }
 
+
+
+    @Override
+    public OrderResponseDTO cancelOrder(OrderRequestDTO orderRequestDTO) {
+        Orders orderDetail = orderRepository.findByOrderId(orderRequestDTO.getOrderId());
+        if(orderDetail == null){
+            throw new RuntimeException("Đơn hàng đã bị user hủy!");
+        }
+        if(orderDetail.getStatus().equals(OrderStatusEnum.ChoXacNhan)){
+
+        }
+        if(orderDetail.getStatus().equals(OrderStatusEnum.DaXacNhan)){
+
+        }
+        if (orderRequestDTO.getOrderId() != null){
+
+        }
+        orderDetail.setStatus(OrderStatusEnum.HuyDatHang);
+        orderDetail = orderRepository.save(orderDetail);
+        OrderResponseDTO orderResponseDTO = orderMapper.toResponseOrder(orderDetail);
+        return orderResponseDTO;
+    }
 }
+

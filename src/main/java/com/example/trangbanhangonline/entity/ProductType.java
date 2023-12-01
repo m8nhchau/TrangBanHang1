@@ -16,7 +16,7 @@ public class ProductType {
     @Column(name = "PRODUCT_TYPE_ID")
     private Integer productTypeId;
 
-    @Column(name = "PRODUCT_NAME")
+    @Column(name = "PRODUCT_TYPE_NAME")
     private String productTypeName;
 
     @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
